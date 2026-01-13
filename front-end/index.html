@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgroAI | Smart Farming Solutions</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>🌱 AgroAI</h1>
+    <p>AI Powered Crop Disease & Fertilizer Prediction</p>
+</header>
+
+<nav>
+    <button onclick="showSection('disease')">Crop Disease</button>
+    <button onclick="showSection('fertilizer')">Fertilizer</button>
+</nav>
+
+<!-- Crop Disease Prediction -->
+<section id="disease" class="card">
+    <h2>Crop Disease Prediction</h2>
+    <input type="file" id="cropImage" accept="image/*">
+    <button onclick="predictDisease()">Predict Disease</button>
+    <p id="diseaseResult"></p>
+</section>
+
+<!-- Fertilizer Prediction -->
+<section id="fertilizer" class="card hidden">
+    <h2>Fertilizer Recommendation</h2>
+    <input type="text" id="crop" placeholder="Crop Name">
+    <input type="number" id="nitrogen" placeholder="Nitrogen">
+    <input type="number" id="phosphorus" placeholder="Phosphorus">
+    <input type="number" id="potassium" placeholder="Potassium">
+    <button onclick="predictFertilizer()">Recommend</button>
+    <p id="fertilizerResult"></p>
+</section>
+
+<footer>
+    <p>© 2026 AgroAI | Smart Farming with AI</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
