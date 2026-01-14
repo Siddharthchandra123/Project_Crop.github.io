@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,26 +7,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-</body>
-</html>
+
+<!-- 🌿 Background Video -->
+<video autoplay muted loop id="bg-video">
+    <source src="nature1.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+</video>
+
+<!-- 🌱 Overlay -->
+<div class="overlay">
+
 <header>
     <h1>🌱 AgroAI</h1>
     <p>AI Powered Crop Disease & Fertilizer Prediction</p>
 </header>
 
 <nav>
-    <button onclick="showSection('disease')">Crop Disease</button>
-    <button onclick="showSection('fertilizer')">Fertilizer</button>
+    <a href="index.html" id="button">Disease</a>
+    <a href="fertilizer.html" id="button" class="active">Fertilizer</a>
 </nav>
-
 <!-- Crop Disease Prediction -->
 <section id="disease" class="card">
     <h2>Crop Disease Prediction</h2>
-    <input type="file" id="cropImage" accept="image/*" title="crop_image">
+
+    <input type="file" id="cropImage" accept="image/*" onchange="previewImage(event)" title="Crop">
+    
     <button onclick="predictDisease()">Predict Disease</button>
+
+    <img id="imagePreview" class="preview hidden" alt="Image Preview">
+
     <p id="diseaseResult"></p>
 </section>
+
 
 <!-- Fertilizer Prediction -->
 <section id="fertilizer" class="card hidden">
@@ -42,6 +54,8 @@
 <footer>
     <p>© 2026 AgroAI | Smart Farming with AI</p>
 </footer>
+
+</div>
 
 <script src="script.js"></script>
 </body>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgroAI | Fertilizer Recommendation</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+
+<video autoplay muted loop id="bg-video">
+    <source src="nature1.mp4" type="video/mp4">
+</video>
+
+<div class="overlay">
+
+<header>
+    <h1>🌾 AgroAI</h1>
+    <p>Fertilizer Recommendation System</p>
+</header>
+
+<nav>
+    <a href="index.html" id="button">Disease</a>
+    <a href="fertilizer.html" id="button" class="active">Fertilizer</a>
+</nav>
+
+<section class="card">
+    <h2>Enter Soil & Crop Details</h2>
+
+    <input type="number" id="nitrogen" placeholder="Nitrogen (N)">
+    <input type="number" id="phosphorus" placeholder="Phosphorus (P)">
+    <input type="number" id="potassium" placeholder="Potassium (K)">
+    <input type="text" id="city" placeholder="City / Location">
+
+
+    <button onclick="predictFertilizer()">Recommend Fertilizer</button>
+
+    <p id="fertilizerResult"></p>
+</section>
+
+<footer>© 2026 AgroAI</footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

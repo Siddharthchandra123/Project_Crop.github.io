@@ -89,6 +89,65 @@ def predict_disease():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+import requests
+import numpy as np
+import pickle
+WEATHER_API_KEY = "dde2b9fb075e41d4b8082159261401"
+def get_weather(city):
+    url = (
+        f"https://api.weatherapi.com/v1/current.json"
+        f"?key={WEATHER_API_KEY}&q={city}&aqi=no"
+    )
+
+    response = requests.get(url)
+    print("WeatherAPI status:", response.status_code)
+    print("WeatherAPI response:", response.text)
+
+    if response.status_code != 200:
+        raise Exception(response.json().get("error", {}).get("message", "Weather API error"))
+
+    data = response.json()
+
+    temperature = data["current"]["temp_c"]
+    humidity = data["current"]["humidity"]
+
+    return temperature, humidity
+
+# -------- LOAD FERTILIZER MODEL --------
+with open(r"C:\Users\Lenovo\Downloads\Project_Crop\back-end\fertilizer.pkl", "rb") as f:
+    fertilizer_model = pickle.load(f)
+
+@app.route("/predict-fertilizer", methods=["POST"])
+def predict_fertilizer():
+    try:
+        data = request.json
+
+        N = float(data["nitrogen"])
+        P = float(data["phosphorus"])
+        K = float(data["potassium"])
+        city = data["city"]
+
+        # 🌦️ fetch weather
+        temperature, humidity = get_weather(city)
+
+        # 🧪 optional pH (default)
+        ph = float(data.get("ph", 6.5))
+        rainfall = float(data.get("rainfall", 100))
+
+        features = np.array([[N, P, K, temperature, humidity, ph, rainfall]])
+
+        prediction = fertilizer_model.predict(features)[0]
+
+        return jsonify({
+            "fertilizer": prediction,
+            "weather": {
+                "temperature": temperature,
+                "humidity": humidity
+            }
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # -------- RUN SERVER --------
 if __name__ == "__main__":
