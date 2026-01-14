@@ -15,6 +15,12 @@ function predictDisease() {
     .catch(err => {
         alert("API Error");
     });
+    if (data.prediction === "Image cannot be recognized") {
+    result.innerHTML = "❌ Image cannot be recognized. Please upload a clear leaf image.";
+} else {
+    result.innerHTML = `🌿 Disease: ${data.prediction}<br>Confidence: ${data.confidence * 100}%`;
+}
+    
 }
 function previewImage(event) {
     const preview = document.getElementById("imagePreview");
@@ -63,29 +69,45 @@ function predictFertilizer() {
 }
 
 
-let map = L.map('map').setView([20.5937, 78.9629], 5); // India center
-let marker;
+// Prevent redeclaration
+if (!window._agroMapInitialized) {
 
-// OpenStreetMap tiles
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap'
-}).addTo(map);
+    window._agroMapInitialized = true;
 
-// Click on map to select location
-map.on('click', function (e) {
-    const { lat, lng } = e.latlng;
+    var map = L.map('map').setView([20.5937, 78.9629], 5);
+    var marker;
 
-    if (marker) {
-        marker.setLatLng([lat, lng]);
-    } else {
-        marker = L.marker([lat, lng]).addTo(map);
-    }
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
 
-    marker.bindPopup(
-        `📍 Selected Location<br>Lat: ${lat.toFixed(4)}<br>Lon: ${lng.toFixed(4)}`
-    ).openPopup();
+    map.on('click', function (e) {
+        const lat = e.latlng.lat;
+        const lon = e.latlng.lng;
 
-    // Save coordinates globally
-    window.selectedLat = lat;
-    window.selectedLon = lng;
-});
+        if (marker) {
+            marker.setLatLng([lat, lon]);
+        } else {
+            marker = L.marker([lat, lon]).addTo(map);
+        }
+
+        window.selectedLat = lat;
+        window.selectedLon = lon;
+
+        fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+        )
+        .then(res => res.json())
+        .then(data => {
+            const address = data.address || {};
+            const city =
+                address.city ||
+                address.town ||
+                address.village ||
+                address.state ||
+                "";
+
+            document.getElementById("city").value = city;
+        });
+    });
+}

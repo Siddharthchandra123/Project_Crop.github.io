@@ -19,12 +19,12 @@
 
 <header>
     <h1>🌱 AgroAI</h1>
-    <p>AI Powered Crop Disease & Fertilizer Prediction</p>
+    <p>AI Powered Crop Disease & Crop Prediction</p>
 </header>
 
 <nav>
     <a href="index.html" id="button">Disease</a>
-    <a href="fertilizer.html" id="button" class="active">Fertilizer</a>
+    <a href="fertilizer.html" id="button" class="active">Crop Recommend</a>
 </nav>
 <!-- Crop Disease Prediction -->
 <section id="disease" class="card">
@@ -40,15 +40,15 @@
 </section>
 
 
-<!-- Fertilizer Prediction -->
+<!-- Crop Recommendation -->
 <section id="fertilizer" class="card hidden">
-    <h2>Fertilizer Recommendation</h2>
+    <h2>Crop Recommendation</h2>
     <input type="text" id="crop" placeholder="Crop Name">
     <input type="number" id="nitrogen" placeholder="Nitrogen">
     <input type="number" id="phosphorus" placeholder="Phosphorus">
     <input type="number" id="potassium" placeholder="Potassium">
     <button onclick="predictFertilizer()">Recommend</button>
-    <p id="fertilizerResult"></p>
+    <p id="Crop_Result"></p>
 </section>
 
 <footer>

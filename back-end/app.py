@@ -71,7 +71,7 @@ transform = transforms.Compose([
 @app.route("/predict-disease", methods=["POST"])
 def predict_disease():
     try:
-        if "image" not in request.files:
+        if "image" not in request.files or request.files["image"].filename == "":
             return jsonify({"error": "No image uploaded"}), 400
 
         image = Image.open(request.files["image"]).convert("RGB")
@@ -79,11 +79,21 @@ def predict_disease():
 
         with torch.no_grad():
             outputs = model(image)
-            pred_index = torch.argmax(outputs, dim=1).item()
+            probs = torch.softmax(outputs, dim=1)
+            confidence, pred_index = torch.max(probs, dim=1)
+
+        confidence = confidence.item()
+        pred_index = pred_index.item()
+
+        if confidence < 0.6:
+            return jsonify({
+                "prediction": "Image cannot be recognized",
+                "confidence": round(confidence, 3)
+            })
 
         return jsonify({
-            "class_index": pred_index,
-            "prediction": CLASS_NAMES[pred_index]
+            "prediction": CLASS_NAMES[pred_index],
+            "confidence": round(confidence, 3)
         })
 
     except Exception as e:
@@ -113,6 +123,25 @@ def get_weather(city):
     
     return temperature, humidity
 
+def get_weather_by_coords(lat, lon):
+    url = (
+        f"https://api.weatherapi.com/v1/current.json"
+        f"?key={WEATHER_API_KEY}&q={lat},{lon}&aqi=no"
+    )
+
+    response = requests.get(url)
+    print("WeatherAPI status:", response.status_code)
+    print("WeatherAPI response:", response.text)
+
+    if response.status_code != 200:
+        raise Exception(response.json().get("error", {}).get("message", "Weather API error"))
+
+    data = response.json()
+
+    temperature = data["current"]["temp_c"]
+    humidity = data["current"]["humidity"]
+    
+    return temperature, humidity
 # -------- LOAD FERTILIZER MODEL --------
 with open(r"C:\Users\Lenovo\Downloads\Project_Crop\back-end\fertilizer.pkl", "rb") as f:
     fertilizer_model = pickle.load(f)
@@ -125,10 +154,10 @@ def predict_fertilizer():
         N = float(data["nitrogen"])
         P = float(data["phosphorus"])
         K = float(data["potassium"])
-        city = data["city"]
+        lat = float(data["lat"])
+        lon = float(data["lon"])
 
-        # 🌦️ fetch weather
-        temperature, humidity = get_weather(city)
+        temperature, humidity = get_weather_by_coords(lat, lon)
 
         # 🧪 optional pH (default)
         ph = float(data.get("ph", 6.5))
