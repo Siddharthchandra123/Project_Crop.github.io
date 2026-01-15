@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroAI | Smart Farming Solutions</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 🌿 Background Video -->
+<video autoplay muted loop id="bg-video">
+    <source src="nature1.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+</video>
+
+<!-- 🌱 Overlay -->
+<div class="overlay">
+
+<header>
+    <h1>🌾 AgroAI</h1>
+    <p>Crop disease prediction system</p>
+    <p>AI Powered Crop Disease & Crop Prediction</p>
+</header>
+
+<nav>
+    <a href="crop_disease/index.html" id="button">Disease</a>
+    <a href="crop_prediction/fertilizer.html" id="button" class="active">Crop Recommend</a>
+    <a href="weather/weather.html" id="button">Weather</a>
+    <a href="mandi/mandi.html" id="button">Mandi Prices</a>
+</nav>
+<!-- Crop Disease Prediction -->
+<section id="disease" class="card">
+    <h2>Crop Disease Prediction</h2>
+
+    <input type="file" id="cropImage" accept="image/*" onchange="previewImage(event)" title="Crop">
+    
+    <button onclick="predictDisease()">Predict Disease</button>
+
+    <img id="imagePreview" class="preview hidden" alt="Image Preview">
+
+    <p id="diseaseResult"></p>
+</section>
+
+
+<!-- Crop Recommendation -->
+<section id="fertilizer" class="card hidden">
+    <h2>Crop Recommendation</h2>
+    <input type="text" id="crop" placeholder="Crop Name">
+    <input type="number" id="nitrogen" placeholder="Nitrogen">
+    <input type="number" id="phosphorus" placeholder="Phosphorus">
+    <input type="number" id="potassium" placeholder="Potassium">
+    <button onclick="predictFertilizer()">Recommend</button>
+    <p id="Crop_Result"></p>
+</section>
+<div id="aiBotBtn" onclick="toggleBot()">🤖</div>
+
+<!-- 🤖 Chatbot Popup -->
+<div class="bubble-bot hidden" id="aiBot">
+
+  <div class="bot-header">
+    🤖 AgroAI Assistant
+    <span>Tap a bubble to continue</span>
+    <span class="close-bot" onclick="toggleBot()">✖</span>
+  </div>
+
+  <div id="chatContent">
+    <div class="bot-message">
+      Hello 🌱 What can I help you with?
+    </div>
+
+    <div class="bubble-area" id="bubbleArea"></div>
+  </div>
+
+  <button id="backBtn" onclick="resetChat()" style="display:none;">
+    ⬅️ Back / Start Over
+  </button>
+
+</div>
+
+<footer>
+    <p>© 2026 AgroAI | Smart Farming with AI</p>
+</footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
