@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgroAI | Live Weather & Farmer Alerts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="weather.css">
+</head>
+
+<body>
+<div class="app">
+
+  <header class="top-bar">
+    <input type="text" id="city" placeholder="Search for location">
+    <button onclick="getWeather()">🔍</button>
+  </header>
+<nav>
+    <a href="index.html" id="button">Disease</a>
+    <a href="fertilizer.html" id="button" class="active">Crop Recommend</a>
+    <a href="weather.html" id="button">Weather</a>
+    <a href="mandi.html" id="button">Mandi Prices</a>
+</nav>
+  <section class="current-card" id="weatherCard">
+  <div class="left">
+    <div class="temp">
+      <span id="temp">--</span>°C
+    </div>
+    <div class="condition" id="condition">--</div>
+    <div class="feels" id="feels">Feels like --°</div>
+    <div id="locationTitle"></div>
+  </div>
+  <div class="right" id="icon">🌙</div>
+</section>
+
+<section class="metrics">
+  <div>💨 Wind<br><span id="wind">-- km/h</span></div>
+  <div>💧 Humidity<br><span id="humidity">--%</span></div>
+  <div>🌫 Visibility<br><span id="visibility">-- km</span></div>
+  <div>🌡 Pressure<br><span id="pressure">-- mb</span></div>
+</section>
+
+
+  <section class="tabs">
+    <button class="active">Overview</button>
+  </section>
+
+  <section class="forecast">
+    <div class="day">
+      <div>Today</div>
+      <div>🌤</div>
+      <div>16° / 6°</div>
+    </div>
+    <div class="day">
+      <div>Thu</div>
+      <div>🌤</div>
+      <div>17° / 7°</div>
+    </div>
+    <div class="day">
+      <div>Fri</div>
+      <div>🌤</div>
+      <div>19° / 7°</div>
+    </div>
+  </section>
+
+  <section class="alert" id="alertBox">
+    ✅ Weather conditions are suitable for farming.
+  </section>
+ <!-- 🤖 Floating AI Button -->
+<!-- 🤖 Floating AI Button -->
+<div id="aiBotBtn" onclick="toggleBot()">🤖</div>
+
+<!-- 🤖 Chatbot Popup -->
+<div class="bubble-bot hidden" id="aiBot">
+
+  <div class="bot-header">
+    🤖 AgroAI Assistant
+    <span>Tap a bubble to continue</span>
+    <span class="close-bot" onclick="toggleBot()">✖</span>
+  </div>
+
+  <div id="chatContent">
+    <div class="bot-message">
+      Hello 🌱 What can I help you with?
+    </div>
+
+    <div class="bubble-area" id="bubbleArea"></div>
+  </div>
+
+  <button id="backBtn" onclick="resetChat()" style="display:none;">
+    ⬅️ Back / Start Over
+  </button>
+
+</div>
+
+</div>
+</div>
+
+<footer>
+    © 2026 AgroAI | Smart Farming Intelligence
+</footer>
+<script src="weather.js"></script>
+</body>
+</html>

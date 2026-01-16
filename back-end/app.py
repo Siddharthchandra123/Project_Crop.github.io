@@ -58,7 +58,7 @@ CLASS_NAMES = [
 device = torch.device("cpu")
 
 model = ResNet9(in_channels=3, num_diseases=NUM_CLASSES)
-model.load_state_dict(torch.load(r"C:\Users\Lenovo\Downloads\Project_Crop\back-end\plant_disease_model.pth", map_location=device))
+model.load_state_dict(torch.load(r"C:\Users\Dell\Downloads\project\Project_Crop\back-end\plant_disease_model.pth", map_location=device))
 model.eval()
 
 # -------- IMAGE TRANSFORM --------
@@ -149,7 +149,7 @@ def get_weather_by_coords(lat, lon):
     return weather, alerts
 
 # -------- LOAD FERTILIZER MODEL --------
-with open(r"C:\Users\Lenovo\Downloads\Project_Crop\back-end\fertilizer.pkl", "rb") as f:
+with open(r"C:\Users\Dell\Downloads\project\Project_Crop\back-end\fertilizer.pkl", "rb") as f:
     fertilizer_model = pickle.load(f)
 
 @app.route("/predict-fertilizer", methods=["POST"])
@@ -242,6 +242,117 @@ def mandi_prices():
     return jsonify({
         "lastUpdated": raw.get("updated_date"),
         "markets": markets
+    })
+from db import get_db, get_all_crops, get_last_crop
+@app.route("/api/rotation/add", methods=["POST"])
+def add_rotation():
+    data = request.json
+    db = get_db()          # 🔓 open
+    cur = db.cursor()
+
+    cur.execute("""
+        INSERT INTO crop_rotation_history
+        (land_id, crop_id, season_id, year, sowing_date, harvest_date)
+        VALUES (%s,%s,%s,%s,%s,%s)
+    """, (
+        data["land_id"], data["crop_id"],
+        data["season_id"], data["year"],
+        data["sowing_date"], data["harvest_date"]
+    ))
+
+    db.commit()
+
+    cur.close()            # 🔒 CLOSE cursor
+    db.close()             # 🔒 CLOSE database
+
+    return jsonify({"status": "success"})
+
+@app.route("/api/rotation/<int:land_id>")
+def rotation_history(land_id):
+    db = get_db()
+    cur = db.cursor(dictionary=True)
+
+    cur.execute("""
+        SELECT c.crop_name, s.season_name, r.year
+        FROM crop_rotation_history r
+        JOIN crops c ON r.crop_id = c.crop_id
+        JOIN seasons s ON r.season_id = s.season_id
+        WHERE land_id=%s
+        ORDER BY year DESC
+    """, (land_id,))
+
+    return jsonify(cur.fetchall())
+from ai_rotation import rotation_score
+import requests
+
+def get_soil_data(lat, lon):
+    try:
+        url = "https://rest.isric.org/soilgrids/v2.0/properties/query"
+        params = {
+            "lat": lat,
+            "lon": lon,
+            "property": ["nitrogen", "phh2o"]
+        }
+        res = requests.get(url, params=params, timeout=10).json()
+
+        return {
+            "nitrogen": res["properties"]["nitrogen"]["mean"],
+            "ph": res["properties"]["phh2o"]["mean"]
+        }
+    except Exception:
+        # SAFE FALLBACK
+        return {"nitrogen": 0.5, "ph": 7.0}
+
+from db import get_land_location
+@app.route("/api/recommend/<int:land_id>")
+def recommend_crop(land_id):
+    land = get_land_location(land_id)
+
+    if not land or not land["latitude"] or not land["longitude"]:
+        return jsonify({"error": "Land location missing"}), 400
+
+    soil = get_soil_data(land["latitude"], land["longitude"])
+    last_crop = get_last_crop(land_id)
+
+    recommendations = []
+    for crop in get_all_crops():
+        score = rotation_score(last_crop, crop, soil)
+        recommendations.append({
+            "crop": crop["crop_name"],
+            "score": score
+        })
+
+    return jsonify(sorted(recommendations, key=lambda x: x["score"], reverse=True))
+def get_weather(lat, lon):
+    url = f"https://api.openweathermap.org/data/2.5/forecast"
+    params = {
+        "lat": lat,
+        "lon": lon,
+        "appid": WEATHER_API_KEY
+    }
+    return requests.get(url, params=params).json()
+@app.route("/api/lands/map/<int:farmer_id>")
+def lands_map(farmer_id):
+    db = get_db()
+    cur = db.cursor(dictionary=True)
+
+    cur.execute("""
+        SELECT land_id, land_name, latitude, longitude
+        FROM lands
+        WHERE farmer_id = %s
+    """, (farmer_id,))
+
+    data = cur.fetchall()
+    cur.close()
+    db.close()
+    return jsonify(data)
+from db import get_land_location
+@app.route("/api/debug/<int:land_id>")
+def debug(land_id):
+    return jsonify({
+        "land": get_land_location(land_id),
+        "crops_count": len(get_all_crops()),
+        "last_crop": get_last_crop(land_id)
     })
 
 # -------- RUN SERVER --------
