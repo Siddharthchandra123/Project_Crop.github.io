@@ -1,24 +1,22 @@
-# Core ML & Deep Learning
+# Core ML
 numpy
 pandas
 scikit-learn
 Pillow
-torch==2.1.2+cpu
-torchvision==0.16.2+cpu
-tensorflow-cpu==2.15.0
-# Backend & API
+torch==2.1.2
+torchvision==0.16.2
+
+# Backend
 flask
 flask-cors
+gunicorn
 requests
 python-dotenv
+authlib
 
-# Weather & Location APIs
+# Weather & Location
 geopy
 timezonefinder
-
-# Data Visualization
-matplotlib
-seaborn
 
 # Database
 mysql-connector-python
@@ -27,6 +25,3 @@ sqlalchemy
 # Utilities
 tqdm
 joblib
-
-# Optional (for deployment & production)
-gunicorn
