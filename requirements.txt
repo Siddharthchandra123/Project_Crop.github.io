@@ -3,7 +3,9 @@ numpy
 pandas
 scikit-learn
 Pillow
-
+torch
+torchvision
+tensorflow
 # Backend & API
 flask
 flask-cors
