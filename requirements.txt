@@ -1,0 +1,32 @@
+# Core ML & Deep Learning
+tensorflow==2.15.0
+numpy
+pandas
+scikit-learn
+opencv-python
+Pillow
+
+# Backend & API
+flask
+flask-cors
+requests
+python-dotenv
+
+# Weather & Location APIs
+geopy
+timezonefinder
+
+# Data Visualization
+matplotlib
+seaborn
+
+# Database
+mysql-connector-python
+sqlalchemy
+
+# Utilities
+tqdm
+joblib
+
+# Optional (for deployment & production)
+gunicorn
