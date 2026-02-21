@@ -1,4 +1,4 @@
-<img width="1146" height="526" alt="image" src="https://github.com/user-attachments/assets/c90f0ac7-c38d-4ce5-bfc8-30f8ce93702f" /><h1><b>🌱 AgroAI – Smart Farming Intelligence Platform</b></h1>
+<h1><b>🌱 AgroAI – Smart Farming Intelligence Platform</b></h1>
 Co-authored-by: Friend Name <chandrasiddharth975@gmail.com>
 AgroAI is an AI-powered smart farming platform designed to help farmers make data-driven agricultural decisions. It integrates machine learning, real-time data, and interactive dashboards to improve crop productivity, reduce losses, and support sustainable farming.
 
